@@ -30,7 +30,11 @@ namespace Platformer.Gameplay
                 {
                     Schedule<EnemyDeath>().enemy = enemy;
                     player.Bounce(2);
+                    if (GameController.powerTimer > 0) {
+                        GameController.ReduceTimer(-20);
+                    } else {
                     GameController.ReduceTimer(20);
+                    }
                 }
         }
     }

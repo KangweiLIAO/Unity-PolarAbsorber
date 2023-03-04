@@ -22,8 +22,10 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        static float timer = 60;
+        public static float timer {get; private set; }  = 60;
+        public static float powerTimer { get; private set; } = 30;
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
+        [SerializeField] TMPro.TextMeshProUGUI pwrText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
 
@@ -50,7 +52,14 @@ namespace Platformer.Mechanics
         void CountdownTimer()
         {
             timer -= Time.deltaTime; //magic variable!!!!
-            tmpText.text = "Timer: " + timer.ToString() + "s";
+            tmpText.text = "Timer: " + Mathf.Round(timer).ToString() + "s";
+            pwrText.text = "Power Timer: " + Mathf.Round(powerTimer).ToString() + "s";
+            if (powerTimer > 0)
+            {
+                powerTimer -= Time.deltaTime;
+            }
+
+
             if (timer <= 0)
             {
                 gameOverGroup.SetActive(true);
