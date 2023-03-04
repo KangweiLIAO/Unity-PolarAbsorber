@@ -22,13 +22,17 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        [SerializeField] float timer = 5;
+        public static float timer {get; private set; }  = 60;
+        public static float powerTimer { get; private set; } = 0;
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
+        [SerializeField] TMPro.TextMeshProUGUI pwrText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
+        [SerializeField] RectTransform flood;
 
-        private void Start()
+        void Start()
         {
+            flood = GetComponent<RectTransform>();
             restartButton.onClick.AddListener(Restart);
         }
         void OnEnable()
@@ -50,7 +54,14 @@ namespace Platformer.Mechanics
         void CountdownTimer()
         {
             timer -= Time.deltaTime; //magic variable!!!!
-            tmpText.text = "Timer: " + timer.ToString() + "s";
+            tmpText.text = "Timer: " + Mathf.Round(timer).ToString() + "s";
+            pwrText.text = "Power Timer: " + Mathf.Round(powerTimer).ToString() + "s";
+            if (powerTimer > 0)
+            {
+                powerTimer -= Time.deltaTime;
+            }
+
+
             if (timer <= 0)
             {
                 gameOverGroup.SetActive(true);
@@ -59,9 +70,23 @@ namespace Platformer.Mechanics
 
         }
 
+        public static void ReduceTimer(float time)
+        {
+            timer -= time;
+        }
+
+        public static void powerUp(float time)
+        {
+            powerTimer += time;
+        }
+
         void Restart()
         {
+
             SceneManager.LoadScene(0);
+            timer = 60;
+            powerTimer = 0;
+
         }
     }
 }
