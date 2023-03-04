@@ -1,6 +1,8 @@
 using Platformer.Core;
 using Platformer.Model;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 namespace Platformer.Mechanics
 {
@@ -20,6 +22,15 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
+        [SerializeField] float timer = 5;
+        [SerializeField] TMPro.TextMeshProUGUI tmpText;
+        [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
+        [SerializeField] Button restartButton;
+
+        private void Start()
+        {
+            restartButton.onClick.AddListener(Restart);
+        }
         void OnEnable()
         {
             Instance = this;
@@ -33,6 +44,24 @@ namespace Platformer.Mechanics
         void Update()
         {
             if (Instance == this) Simulation.Tick();
+            CountdownTimer();
+        }
+
+        void CountdownTimer()
+        {
+            timer -= Time.deltaTime; //magic variable!!!!
+            tmpText.text = "Timer: " + timer.ToString() + "s";
+            if (timer <= 0)
+            {
+                gameOverGroup.SetActive(true);
+                Time.timeScale = 0; //pauses game
+            }
+
+        }
+
+        void Restart()
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }
