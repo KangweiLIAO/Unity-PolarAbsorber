@@ -22,12 +22,12 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        [SerializeField] float timer = 5;
+        static float timer = 60;
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
 
-        private void Start()
+        void Start()
         {
             restartButton.onClick.AddListener(Restart);
         }
@@ -59,9 +59,17 @@ namespace Platformer.Mechanics
 
         }
 
+        public static void ReduceTimer(float time)
+        {
+            timer -= time;
+        }
+
         void Restart()
         {
+
             SceneManager.LoadScene(0);
+            timer = 60;
+
         }
     }
 }
