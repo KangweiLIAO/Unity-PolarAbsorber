@@ -36,6 +36,7 @@ namespace Platformer.Mechanics
 
         [SerializeField] float timer = 60;
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
+        [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
 
         bool jump;
         Vector2 move;
@@ -110,6 +111,11 @@ namespace Platformer.Mechanics
         {
             timer -= Time.deltaTime; //magic variable!!!!
             tmpText.text = "Timer: " + timer.ToString() + "s";
+            if(timer <= 0){
+                gameOverGroup.SetActive(true);
+                Time.timeScale = 0; //pauses game
+            }
+
         }
 
         protected override void ComputeVelocity()
