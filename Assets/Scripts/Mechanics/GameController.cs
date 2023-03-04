@@ -23,7 +23,7 @@ namespace Platformer.Mechanics
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
         public static float timer {get; private set; }  = 60;
-        public static float powerTimer { get; private set; } = 30;
+        public static float powerTimer { get; private set; } = 0;
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
         [SerializeField] TMPro.TextMeshProUGUI pwrText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
@@ -73,11 +73,17 @@ namespace Platformer.Mechanics
             timer -= time;
         }
 
+        public static void powerUp(float time)
+        {
+            powerTimer += time;
+        }
+
         void Restart()
         {
 
             SceneManager.LoadScene(0);
             timer = 60;
+            powerTimer = 0;
 
         }
     }

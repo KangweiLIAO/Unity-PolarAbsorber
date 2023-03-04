@@ -16,7 +16,7 @@ namespace Platformer.Gameplay
 
         public override void Execute()
         {
-            /*
+            
             var player = model.player;
             if (player.health.IsAlive)
             {
@@ -32,7 +32,7 @@ namespace Platformer.Gameplay
                 player.animator.SetBool("dead", true);
                 Simulation.Schedule<PlayerSpawn>(2);
             }
-            */
+            
         }
     }
 }
