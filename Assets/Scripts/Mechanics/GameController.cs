@@ -28,9 +28,11 @@ namespace Platformer.Mechanics
         [SerializeField] TMPro.TextMeshProUGUI pwrText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
+        [SerializeField] RectTransform flood;
 
         void Start()
         {
+            flood = GetComponent<RectTransform>();
             restartButton.onClick.AddListener(Restart);
         }
         void OnEnable()
