@@ -60,8 +60,7 @@ namespace Platformer.Mechanics
             CountdownTimer();
             if (timer <= 0)
             {
-                tmpText.text = "";
-                Flood(); 
+                Flood();
             }
         }
 
@@ -72,7 +71,6 @@ namespace Platformer.Mechanics
             flood.offsetMax = new Vector2(flood.offsetMax.x, Mathf.Lerp(-Screen.height, 0, t));
            
         }
-
         void CountdownTimer()
         {
             if (timer > 60)

@@ -21,15 +21,14 @@ namespace Platformer.Mechanics
         [ContextMenu("Find All Tokens")]
         void FindAllTokensInScene()
         {
-            tokens = UnityEngine.Object.FindObjectsOfType<TokenInstance>();
+            tokens = FindObjectsOfType<TokenInstance>();
         }
 
-        void Awake()
+        void RegisterTokens()
         {
             //if tokens are empty, find all instances.
             //if tokens are not empty, they've been added at editor time.
-            if (tokens.Length == 0)
-                FindAllTokensInScene();
+            FindAllTokensInScene();
             //Register all tokens so they can work with this controller.
             for (var i = 0; i < tokens.Length; i++)
             {
@@ -40,6 +39,7 @@ namespace Platformer.Mechanics
 
         void Update()
         {
+            RegisterTokens();
             //if it's time for the next frame...
             if (Time.time - nextFrameTime > (1f / frameRate))
             {
@@ -54,7 +54,7 @@ namespace Platformer.Mechanics
                         if (token.collected && token.frame == token.sprites.Length - 1)
                         {
                             token.gameObject.SetActive(false);
-                            tokens[i] = null;
+                            Destroy(token.gameObject);
                         }
                         else
                         {
