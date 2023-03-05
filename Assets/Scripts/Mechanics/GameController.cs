@@ -31,6 +31,7 @@ namespace Platformer.Mechanics
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
         [SerializeField] TMPro.TextMeshProUGUI pwrText;
         [SerializeField] TMPro.TextMeshProUGUI ptsText;
+        [SerializeField] TMPro.TextMeshProUGUI totalPtsText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
         [SerializeField] RectTransform flood;
@@ -57,46 +58,63 @@ namespace Platformer.Mechanics
         {
             if (Instance == this) Simulation.Tick();
             CountdownTimer();
-
-            if (timer <= 0) {
-                t += Time.deltaTime;
-                flood.offsetMin = new Vector2(flood.offsetMin.x, Mathf.Lerp(-Screen.height, 0, t));
-                flood.offsetMax = new Vector2(flood.offsetMax.x, Mathf.Lerp(-Screen.height, 0, t));
+            if (timer <= 0)
+            {
+                Flood();
             }
         }
 
+        void Flood()
+        {
+            t += Time.deltaTime;
+            flood.offsetMin = new Vector2(flood.offsetMin.x, Mathf.Lerp(-Screen.height, 0, t));
+            flood.offsetMax = new Vector2(flood.offsetMax.x, Mathf.Lerp(-Screen.height, 0, t));
+           
+        }
         void CountdownTimer()
         {
+            if (timer > 60)
+            {
+                timer = 60;
+            }
             timer -= Time.deltaTime; //magic variable!!!!
             tmpText.text = "Timer: " + Mathf.Round(timer).ToString() + "s";
             pwrText.text = "Power Timer: " + Mathf.Round(powerTimer).ToString() + "s";
+            ptsText.text = "Points: " + Mathf.Round(points).ToString();
             if (powerTimer > 0)
             {
+                if(powerTimer > 30)
+                {
+                    powerTimer = 30;
+                }
                 powerTimer -= Time.deltaTime;
             }
 
+            points += 100 * Time.deltaTime;
 
-            if (timer <= -2)
+            if (timer <= -3)
             {
+                totalPtsText.text = "Total Points: " + Mathf.Round(points).ToString();
                 gameOverGroup.SetActive(true);
-                // Time.timeScale = 0; //pauses game
+                Time.timeScale = 0;
             }
 
         }
 
         public static void ReduceTimer(float time)
         {
-            timer -= time;
+            if(timer - time < 0) timer = 0;
+            else timer -= time;
         }
 
-        public static void powerUp(float time)
+        public static void PowerUp(float time)
         {
             powerTimer += time;
         }
 
-        public static void increasePoints(float value)
+        public static void IncreasePoints(float value)
         {
-           
+            points += value;
         }
 
         void Restart()
