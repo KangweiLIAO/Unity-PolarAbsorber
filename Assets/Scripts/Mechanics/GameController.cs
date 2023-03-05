@@ -3,6 +3,8 @@ using Platformer.Model;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Platformer.Mechanics
 {
@@ -22,15 +24,23 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        public static float timer {get; private set; }  = 60;
+        public static float timer {get; private set; }  = 5;
         public static float powerTimer { get; private set; } = 0;
+        public static float points { get; private set; } = 0;
+
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
         [SerializeField] TMPro.TextMeshProUGUI pwrText;
+        [SerializeField] TMPro.TextMeshProUGUI ptsText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
+        [SerializeField] RectTransform flood;
+
+        float t;
+
 
         void Start()
         {
+            t = 0;
             restartButton.onClick.AddListener(Restart);
         }
         void OnEnable()
@@ -47,6 +57,12 @@ namespace Platformer.Mechanics
         {
             if (Instance == this) Simulation.Tick();
             CountdownTimer();
+
+            if (timer <= 0) {
+                t += Time.deltaTime;
+                flood.offsetMin = new Vector2(flood.offsetMin.x, Mathf.Lerp(-Screen.height, 0, t));
+                flood.offsetMax = new Vector2(flood.offsetMax.x, Mathf.Lerp(-Screen.height, 0, t));
+            }
         }
 
         void CountdownTimer()
@@ -60,10 +76,10 @@ namespace Platformer.Mechanics
             }
 
 
-            if (timer <= 0)
+            if (timer <= -2)
             {
                 gameOverGroup.SetActive(true);
-                Time.timeScale = 0; //pauses game
+                // Time.timeScale = 0; //pauses game
             }
 
         }
@@ -78,13 +94,17 @@ namespace Platformer.Mechanics
             powerTimer += time;
         }
 
+        public static void increasePoints(float value)
+        {
+           
+        }
+
         void Restart()
         {
-
             SceneManager.LoadScene(0);
             timer = 60;
             powerTimer = 0;
-
+            points = 0;
         }
     }
 }
