@@ -32,6 +32,7 @@ namespace Platformer.Gameplay
                     player.Bounce(2);
                     if (GameController.powerTimer > 0) {
                         GameController.ReduceTimer(-20);
+                        GameController.IncreasePoints(1000);
                     } else {
                     GameController.ReduceTimer(20);
                     }
