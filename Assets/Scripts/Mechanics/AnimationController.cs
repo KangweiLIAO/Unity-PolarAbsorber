@@ -10,7 +10,7 @@ namespace Platformer.Mechanics
     /// AnimationController integrates physics and animation. It is generally used for simple enemy animation.
     /// </summary>
     [RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
-    public class AnimationController : KinematicObject
+    public class AnimationController : MonoBehaviour
     {
         /// <summary>
         /// Max horizontal speed.
@@ -46,31 +46,31 @@ namespace Platformer.Mechanics
             animator = GetComponent<Animator>();
         }
 
-        protected override void ComputeVelocity()
+        protected void ComputeVelocity()
         {
-            if (jump && IsGrounded)
-            {
-                velocity.y = jumpTakeOffSpeed * model.jumpModifier;
-                jump = false;
-            }
-            else if (stopJump)
-            {
-                stopJump = false;
-                if (velocity.y > 0)
-                {
-                    velocity.y = velocity.y * model.jumpDeceleration;
-                }
-            }
+            //if (jump && IsGrounded)
+            //{
+            //    velocity.y = jumpTakeOffSpeed * model.jumpModifier;
+            //    jump = false;
+            //}
+            //else if (stopJump)
+            //{
+            //    stopJump = false;
+            //    if (velocity.y > 0)
+            //    {
+            //        velocity.y = velocity.y * model.jumpDeceleration;
+            //    }
+            //}
 
-            if (move.x > 0.01f)
-                spriteRenderer.flipX = false;
-            else if (move.x < -0.01f)
-                spriteRenderer.flipX = true;
+            //if (move.x > 0.01f)
+            //    spriteRenderer.flipX = false;
+            //else if (move.x < -0.01f)
+            //    spriteRenderer.flipX = true;
 
-            animator.SetBool("grounded", IsGrounded);
-            animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
+            animator.SetBool("grounded", true);
+            //animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
 
-            targetVelocity = move * maxSpeed;
+            //targetVelocity = move * maxSpeed;
         }
     }
 }
