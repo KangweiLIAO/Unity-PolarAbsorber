@@ -3,6 +3,8 @@ using Platformer.Model;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace Platformer.Mechanics
 {
@@ -22,13 +24,24 @@ namespace Platformer.Mechanics
         //conveniently configured inside the inspector.
         public PlatformerModel model = Simulation.GetModel<PlatformerModel>();
 
-        [SerializeField] float timer = 5;
+        public static float timer {get; private set; }  = 5;
+        public static float powerTimer { get; private set; } = 0;
+        public static float points { get; private set; } = 0;
+
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
+        [SerializeField] TMPro.TextMeshProUGUI pwrText;
+        [SerializeField] TMPro.TextMeshProUGUI ptsText;
+        [SerializeField] TMPro.TextMeshProUGUI totalPtsText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
+        [SerializeField] RectTransform flood;
 
-        private void Start()
+        float t;
+
+
+        void Start()
         {
+            t = 0;
             restartButton.onClick.AddListener(Restart);
         }
         void OnEnable()
@@ -45,23 +58,71 @@ namespace Platformer.Mechanics
         {
             if (Instance == this) Simulation.Tick();
             CountdownTimer();
-        }
-
-        void CountdownTimer()
-        {
-            timer -= Time.deltaTime; //magic variable!!!!
-            tmpText.text = "Timer: " + timer.ToString() + "s";
             if (timer <= 0)
             {
-                gameOverGroup.SetActive(true);
-                Time.timeScale = 0; //pauses game
+                Flood();
+            }
+        }
+
+        void Flood()
+        {
+            t += Time.deltaTime;
+            flood.offsetMin = new Vector2(flood.offsetMin.x, Mathf.Lerp(-Screen.height, 0, t));
+            flood.offsetMax = new Vector2(flood.offsetMax.x, Mathf.Lerp(-Screen.height, 0, t));
+           
+        }
+        void CountdownTimer()
+        {
+            if (timer > 60)
+            {
+                timer = 60;
+            }
+            timer -= Time.deltaTime; //magic variable!!!!
+            tmpText.text = "Timer: " + Mathf.Round(timer).ToString() + "s";
+            pwrText.text = "Power Timer: " + Mathf.Round(powerTimer).ToString() + "s";
+            ptsText.text = "Points: " + Mathf.Round(points).ToString();
+            if (powerTimer > 0)
+            {
+                if(powerTimer > 30)
+                {
+                    powerTimer = 30;
+                }
+                powerTimer -= Time.deltaTime;
             }
 
+            points += 100 * Time.deltaTime;
+
+            if (timer <= -3)
+            {
+                totalPtsText.text = "Total Points: " + Mathf.Round(points).ToString();
+                gameOverGroup.SetActive(true);
+                Time.timeScale = 0;
+            }
+
+        }
+
+        public static void ReduceTimer(float time)
+        {
+            if(timer - time < 0) timer = 0;
+            else timer -= time;
+        }
+
+        public static void PowerUp(float time)
+        {
+            powerTimer += time;
+        }
+
+        public static void IncreasePoints(float value)
+        {
+            points += value;
         }
 
         void Restart()
         {
             SceneManager.LoadScene(0);
+            timer = 60;
+            powerTimer = 0;
+            points = 0;
         }
     }
 }
