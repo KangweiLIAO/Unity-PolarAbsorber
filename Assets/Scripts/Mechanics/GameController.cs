@@ -26,14 +26,16 @@ namespace Platformer.Mechanics
 
         public static float timer {get; private set; }  = 5;
         public static float powerTimer { get; private set; } = 0;
+        public static float points { get; private set; } = 0;
+
         [SerializeField] TMPro.TextMeshProUGUI tmpText;
         [SerializeField] TMPro.TextMeshProUGUI pwrText;
+        [SerializeField] TMPro.TextMeshProUGUI ptsText;
         [SerializeField] GameObject gameOverGroup; //drag gameobject into inspector
         [SerializeField] Button restartButton;
         [SerializeField] RectTransform flood;
 
         float t;
-        public float speed;
 
 
         void Start()
@@ -92,13 +94,17 @@ namespace Platformer.Mechanics
             powerTimer += time;
         }
 
+        public static void increasePoints(float value)
+        {
+           
+        }
+
         void Restart()
         {
-
             SceneManager.LoadScene(0);
             timer = 60;
             powerTimer = 0;
-
+            points = 0;
         }
     }
 }
