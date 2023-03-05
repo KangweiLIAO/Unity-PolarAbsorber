@@ -60,6 +60,7 @@ namespace Platformer.Mechanics
             CountdownTimer();
             if (timer <= 0)
             {
+                tmpText.text = "";
                 Flood();
             }
         }
